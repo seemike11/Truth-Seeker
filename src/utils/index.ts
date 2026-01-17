@@ -12,9 +12,9 @@ export async function comparePasswords(password: string, hash: string): Promise<
 }
 
 // JWT token generation
-export function generateToken(payload: object, expiresIn: string = '24h'): string {
-    const secret = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-    return jwt.sign(payload, secret, { expiresIn });
+export function generateToken(payload: any, expiresIn: string = '24h'): string {
+    const secret: any = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
+    return jwt.sign(payload, secret, { expiresIn } as any);
 }
 
 // JWT token verification
