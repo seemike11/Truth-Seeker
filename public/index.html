@@ -1,56 +1,603 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Honest Govt App</title>
-    <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; max-width: 800px; }
-      .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
-      input { padding: 0.5rem; }
-      button { padding: 0.55rem 0.8rem; cursor: pointer; }
-      pre { background: #f6f8fa; padding: 1rem; overflow: auto; }
-      small { color: #555; }
-    </style>
-  </head>
-  <body>
-    <h1>Honest Govt App</h1>
-    <p><small>If you can see this page, the server is running.</small></p>
 
-    <h2>Test API</h2>
-    <div class="row">
-      <label for="userId">User ID:</label>
-      <input id="userId" value="1" />
-      <button id="getUser">GET /api/users/:id</button>
-      <button id="createUser">POST /api/users</button>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Honest Govt App - API Testing</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <h3>Response</h3>
-    <pre id="out">(click a button)</pre>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+    }
 
-    <script>
-      const out = document.getElementById('out');
-      const userId = document.getElementById('userId');
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
 
-      function show(result) {
-        out.textContent = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
+    header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      opacity: 0.9;
+    }
+
+    main {
+      padding: 2rem;
+    }
+
+    .section {
+      margin-bottom: 2rem;
+      padding: 1.5rem;
+      background: #f8f9fa;
+      border-radius: 8px;
+      border-left: 4px solid #667eea;
+    }
+
+    h2 {
+      color: #333;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 0.5rem;
+    }
+
+    .form-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group.full {
+      grid-column: 1 / -1;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: #555;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 0.75rem;
+      border: 2px solid #ddd;
+      border-radius: 5px;
+      font-size: 1rem;
+      transition: border-color 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    textarea {
+      grid-column: 1 / -1;
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    button {
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+    }
+
+    button.primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    button.secondary {
+      background: #e9ecef;
+      color: #333;
+    }
+
+    button.secondary:hover {
+      background: #dee2e6;
+    }
+
+    .token-display {
+      background: #f1f3f5;
+      padding: 1rem;
+      border-radius: 5px;
+      margin: 1rem 0;
+      word-break: break-all;
+      font-family: monospace;
+      font-size: 0.9rem;
+    }
+
+    .response {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 5px;
+      background: #f1f3f5;
+      border-left: 4px solid #667eea;
+    }
+
+    .response.success {
+      border-left-color: #28a745;
+      background: #d4edda;
+    }
+
+    .response.error {
+      border-left-color: #dc3545;
+      background: #f8d7da;
+    }
+
+    pre {
+      background: #2d2d2d;
+      color: #f8f8f2;
+      padding: 1rem;
+      border-radius: 5px;
+      overflow: auto;
+      font-size: 0.9rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 768px) {
+
+      .form-group,
+      .grid {
+        grid-template-columns: 1fr;
       }
 
-      document.getElementById('getUser').addEventListener('click', async () => {
-        const res = await fetch(`/api/users/${encodeURIComponent(userId.value)}`);
-        const text = await res.text();
-        show({ status: res.status, body: text });
-      });
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
 
-      document.getElementById('createUser').addEventListener('click', async () => {
-        const res = await fetch('/api/users', {
+<body>
+  <div class="container">
+    <header>
+      <h1>🏛️ Honest Govt App</h1>
+      <p class="subtitle">Complete API Testing Dashboard</p>
+    </header>
+    <main>
+      <!-- Authentication Section -->
+      <div class="section">
+        <h2>🔐 Authentication</h2>
+        <div class="form-group full">
+          <label>Auth Token:</label>
+          <input type="text" id="authToken" placeholder="Your JWT token will appear here" readonly />
+        </div>
+        <div class="grid">
+          <div>
+            <h3 style="margin: 1rem 0 0.5rem;">Register</h3>
+            <div class="form-group full">
+              <label>Name:</label>
+              <input type="text" id="registerName" placeholder="John Doe" />
+            </div>
+            <div class="form-group full">
+              <label>Email:</label>
+              <input type="email" id="registerEmail" placeholder="john@example.com" />
+            </div>
+            <div class="form-group full">
+              <label>Password:</label>
+              <input type="password" id="registerPassword" placeholder="Password123" />
+            </div>
+            <div class="form-group full">
+              <label>Confirm Password:</label>
+              <input type="password" id="registerConfirmPassword" placeholder="Password123" />
+            </div>
+            <button class="primary" onclick="register()">Register</button>
+          </div>
+          <div>
+            <h3 style="margin: 1rem 0 0.5rem;">Login</h3>
+            <div class="form-group full">
+              <label>Email:</label>
+              <input type="email" id="loginEmail" placeholder="john@example.com" />
+            </div>
+            <div class="form-group full">
+              <label>Password:</label>
+              <input type="password" id="loginPassword" placeholder="Password123" />
+            </div>
+            <button class="primary" onclick="login()">Login</button>
+          </div>
+        </div>
+        <div id="authResponse" class="response" style="display: none;"></div>
+      </div>
+
+      <!-- User Management Section -->
+      <div class="section">
+        <h2>👥 User Management</h2>
+        <div class="form-group full">
+          <label>User ID:</label>
+          <input type="text" id="userId" placeholder="Enter user ID" />
+        </div>
+        <div class="button-group">
+          <button class="primary" onclick="getUser()">Get User</button>
+          <button class="primary" onclick="getAllUsers()">Get All Users</button>
+          <button class="secondary" onclick="deleteUser()">Delete User</button>
+        </div>
+        <h3 style="margin: 1rem 0 0.5rem;">Update User</h3>
+        <div class="form-group full">
+          <label>User ID:</label>
+          <input type="text" id="updateUserId" placeholder="Enter user ID" />
+        </div>
+        <div class="form-group full">
+          <label>New Name:</label>
+          <input type="text" id="updateUserName" placeholder="New name" />
+        </div>
+        <div class="form-group full">
+          <label>New Email:</label>
+          <input type="email" id="updateUserEmail" placeholder="New email" />
+        </div>
+        <button class="primary" onclick="updateUser()">Update User</button>
+        <div id="userResponse" class="response" style="display: none;"></div>
+      </div>
+
+      <!-- Product Management Section -->
+      <div class="section">
+        <h2>📦 Product Management</h2>
+        <div class="grid">
+          <div>
+            <h3 style="margin: 1rem 0 0.5rem;">Create Product</h3>
+            <div class="form-group full">
+              <label>Name:</label>
+              <input type="text" id="productName" placeholder="Product name" />
+            </div>
+            <div class="form-group full">
+              <label>Description:</label>
+              <textarea id="productDescription" placeholder="Product description"></textarea>
+            </div>
+            <div class="form-group full">
+              <label>Price:</label>
+              <input type="number" id="productPrice" placeholder="99.99" step="0.01" />
+            </div>
+            <div class="form-group full">
+              <label>Category:</label>
+              <input type="text" id="productCategory" placeholder="Electronics" />
+            </div>
+            <div class="form-group full">
+              <label>Stock:</label>
+              <input type="number" id="productStock" placeholder="100" />
+            </div>
+            <button class="primary" onclick="createProduct()">Create Product</button>
+          </div>
+          <div>
+            <h3 style="margin: 1rem 0 0.5rem;">Query Products</h3>
+            <div class="form-group full">
+              <label>Product ID:</label>
+              <input type="text" id="productId" placeholder="Enter product ID" />
+            </div>
+            <button class="primary" onclick="getProduct()">Get Product</button>
+            <button class="primary" onclick="getAllProducts()">Get All Products</button>
+            <div style="margin-top: 1rem;">
+              <label>Category Filter:</label>
+              <input type="text" id="categoryFilter" placeholder="e.g., Electronics" />
+              <button class="primary" onclick="getProductsByCategory()">Filter by Category</button>
+            </div>
+            <div style="margin-top: 1rem;">
+              <label>Search Query:</label>
+              <input type="text" id="searchQuery" placeholder="Search products..." />
+              <button class="primary" onclick="searchProducts()">Search</button>
+            </div>
+          </div>
+        </div>
+        <h3 style="margin: 1rem 0 0.5rem;">Update/Delete Product</h3>
+        <div class="form-group full">
+          <label>Product ID:</label>
+          <input type="text" id="updateProductId" placeholder="Enter product ID" />
+        </div>
+        <div class="button-group">
+          <button class="secondary" onclick="deleteProduct()">Delete Product</button>
+        </div>
+        <div id="productResponse" class="response" style="display: none;"></div>
+      </div>
+
+      <!-- Response Display -->
+      <div class="section">
+        <h2>📊 Response</h2>
+        <pre id="responseOutput" style="display: none;"></pre>
+        <div id="noResponse" style="color: #999; text-align: center; padding: 2rem;">
+          Click any button to see the response here
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    let authToken = localStorage.getItem('authToken') || '';
+
+    // Load token on page load
+    if (authToken) {
+      document.getElementById('authToken').value = authToken;
+    }
+
+    function showResponse(response, isError = false) {
+      const output = document.getElementById('responseOutput');
+      const noResponse = document.getElementById('noResponse');
+      output.textContent = JSON.stringify(response, null, 2);
+      output.style.display = 'block';
+      noResponse.style.display = 'none';
+
+      // Scroll to response
+      output.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function showMessage(elementId, message, isError = false) {
+      const element = document.getElementById(elementId);
+      element.innerHTML = `<div style="color: ${isError ? '#721c24' : '#155724'};">${message}</div>`;
+      element.style.display = 'block';
+    }
+
+    async function register() {
+      const name = document.getElementById('registerName').value;
+      const email = document.getElementById('registerEmail').value;
+      const password = document.getElementById('registerPassword').value;
+      const confirmPassword = document.getElementById('registerConfirmPassword').value;
+
+      if (!name || !email || !password || !confirmPassword) {
+        showMessage('authResponse', 'Please fill all fields', true);
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/register', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: 'Test User' }),
+          body: JSON.stringify({ name, email, password, confirmPassword }),
         });
-        const text = await res.text();
-        show({ status: res.status, body: text });
-      });
-    </script>
-  </body>
+        const data = await res.json();
+        showResponse(data);
+
+        if (data.success && data.data.token) {
+          authToken = data.data.token;
+          localStorage.setItem('authToken', authToken);
+          document.getElementById('authToken').value = authToken;
+          showMessage('authResponse', 'Registration successful!');
+        }
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function login() {
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+
+      if (!email || !password) {
+        showMessage('authResponse', 'Please fill all fields', true);
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        showResponse(data);
+
+        if (data.success && data.data.token) {
+          authToken = data.data.token;
+          localStorage.setItem('authToken', authToken);
+          document.getElementById('authToken').value = authToken;
+          showMessage('authResponse', 'Login successful!');
+        }
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function getUser() {
+      const id = document.getElementById('userId').value;
+      if (!id) { showMessage('userResponse', 'Please enter user ID', true); return; }
+
+      try {
+        const res = await fetch(`/api/users/${id}`, {
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function getAllUsers() {
+      try {
+        const res = await fetch('/api/users', {
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function updateUser() {
+      const id = document.getElementById('updateUserId').value;
+      const name = document.getElementById('updateUserName').value;
+      const email = document.getElementById('updateUserEmail').value;
+
+      if (!id) { showMessage('userResponse', 'Please enter user ID', true); return; }
+
+      try {
+        const res = await fetch(`/api/users/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ name, email }),
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function deleteUser() {
+      const id = document.getElementById('userId').value;
+      if (!id) { showMessage('userResponse', 'Please enter user ID', true); return; }
+
+      if (!confirm('Are you sure you want to delete this user?')) return;
+
+      try {
+        const res = await fetch(`/api/users/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function createProduct() {
+      const name = document.getElementById('productName').value;
+      const description = document.getElementById('productDescription').value;
+      const price = parseFloat(document.getElementById('productPrice').value);
+      const category = document.getElementById('productCategory').value;
+      const stock = parseInt(document.getElementById('productStock').value);
+
+      if (!name || !description || !price || !category || !stock) {
+        showMessage('productResponse', 'Please fill all fields', true);
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${authToken}`,
+          },
+          body: JSON.stringify({ name, description, price, category, stock }),
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function getProduct() {
+      const id = document.getElementById('productId').value;
+      if (!id) { showMessage('productResponse', 'Please enter product ID', true); return; }
+
+      try {
+        const res = await fetch(`/api/products/${id}`);
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function getAllProducts() {
+      try {
+        const res = await fetch('/api/products');
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function getProductsByCategory() {
+      const category = document.getElementById('categoryFilter').value;
+      if (!category) { showMessage('productResponse', 'Please enter category', true); return; }
+
+      try {
+        const res = await fetch(`/api/products?category=${encodeURIComponent(category)}`);
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function searchProducts() {
+      const query = document.getElementById('searchQuery').value;
+      if (!query) { showMessage('productResponse', 'Please enter search query', true); return; }
+
+      try {
+        const res = await fetch(`/api/products/search?q=${encodeURIComponent(query)}`);
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+
+    async function deleteProduct() {
+      const id = document.getElementById('updateProductId').value;
+      if (!id) { showMessage('productResponse', 'Please enter product ID', true); return; }
+
+      if (!confirm('Are you sure you want to delete this product?')) return;
+
+      try {
+        const res = await fetch(`/api/products/${id}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${authToken}` },
+        });
+        const data = await res.json();
+        showResponse(data);
+      } catch (error) {
+        showResponse({ error: error.message }, true);
+      }
+    }
+  </script>
+</body>
+
 </html>
