@@ -3,8 +3,7 @@ import path from 'path';
 import router from './routes';
 import { errorHandler, requestLogger } from './middleware';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+export const app = express();
 
 // Middleware
 app.use(express.json());
@@ -28,6 +27,7 @@ const publicDir = path.join(__dirname, '..', 'public');
 app.use(express.static(publicDir));
 
 // API routes
+<<<<<<< HEAD
 app.use('/api', router);
 
 // Health check endpoint
@@ -67,3 +67,6 @@ app.listen(PORT, () => {
 });
 
 export { app };
+=======
+app.use('/api', router);
+>>>>>>> cb93d563e04e750c8f5cd6a30a8e9cb6071b705f

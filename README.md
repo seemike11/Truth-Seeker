@@ -96,6 +96,7 @@ POST   /api/auth/register      # Register a new user
 POST   /api/auth/login         # Login user
 ```
 
+<<<<<<< HEAD
 ### Users (Protected - Requires JWT Token)
 ```
 GET    /api/users              # Get all users
@@ -105,6 +106,20 @@ PUT    /api/users/:id          # Update user
 DELETE /api/users/:id          # Delete user
 PUT    /api/users/:id/password # Change password
 ```
+=======
+### Render Quickstart (recommended)
+1. **Push to GitHub** (Render deploys from GitHub).
+2. **Create a new Web Service** in Render and select this repo.
+3. Render will read `render.yaml` automatically. If asked for commands:
+   - **Build command:** `npm ci && npm run build`
+   - **Start command:** `npm start`
+4. After the deploy is live, use the Render dashboard to **add your custom domain**.
+5. In Squarespace DNS, add the **CNAME/A records** that Render provides for your domain.
+6. Wait for DNS to propagate (usually minutes, sometimes up to 24 hours).
+
+## Contributing
+Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
+>>>>>>> cb93d563e04e750c8f5cd6a30a8e9cb6071b705f
 
 ### Products
 ```

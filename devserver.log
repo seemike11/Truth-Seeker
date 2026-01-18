@@ -1,0 +1,17 @@
+
+> replit-to-vscode-app@1.0.0 dev
+> ts-node src/index.ts
+
+Server is running on http://localhost:3000
+API Documentation:
+- POST /api/auth/register - Register a new user
+- POST /api/auth/login - Login user
+- GET /api/users - Get all users (authenticated)
+- GET /api/users/:id - Get user by ID (authenticated)
+- PUT /api/users/:id - Update user (authenticated)
+- DELETE /api/users/:id - Delete user (authenticated)
+- POST /api/products - Create product (authenticated)
+- GET /api/products - Get all products
+- GET /api/products/:id - Get product by ID
+- PUT /api/products/:id - Update product (authenticated)
+- DELETE /api/products/:id - Delete product (authenticated)
