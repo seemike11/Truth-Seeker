@@ -16,4 +16,4 @@ services:
       - key: CORS_ORIGIN
         value: "*"
     domains:
-      - honestgovt.com
+      - www.honestgovt.com
