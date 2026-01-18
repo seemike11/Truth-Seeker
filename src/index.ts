@@ -2,8 +2,7 @@ import express from 'express';
 import path from 'path';
 import router from './routes';
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+export const app = express();
 
 // Middleware
 app.use(express.json());
@@ -14,7 +13,3 @@ app.use(express.static(publicDir));
 
 // API routes
 app.use('/api', router);
-
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
