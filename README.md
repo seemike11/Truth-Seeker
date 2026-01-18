@@ -58,6 +58,16 @@ After starting the application, you can access it at `http://localhost:3000`.
 - Create a new Render Web Service from the repo (it will pick up `render.yaml`).
 - Once deployed, add a custom domain on Render (recommended: `app.honestgovt.com`).
 
+### Render Quickstart (recommended)
+1. **Push to GitHub** (Render deploys from GitHub).
+2. **Create a new Web Service** in Render and select this repo.
+3. Render will read `render.yaml` automatically. If asked for commands:
+   - **Build command:** `npm ci && npm run build`
+   - **Start command:** `npm start`
+4. After the deploy is live, use the Render dashboard to **add your custom domain**.
+5. In Squarespace DNS, add the **CNAME/A records** that Render provides for your domain.
+6. Wait for DNS to propagate (usually minutes, sometimes up to 24 hours).
+
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
 
