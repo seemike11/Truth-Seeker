@@ -1,5 +1,6 @@
 import express from 'express';
 import path from 'path';
+import { logMissingEnvVars } from './config';
 import router from './routes';
 
 export const app = express();
@@ -16,6 +17,7 @@ app.use(express.static(publicDir));
 app.use('/api', router);
 
 if (require.main === module) {
+    logMissingEnvVars();
     app.listen(PORT, () => {
         console.log(`Server is running on http://localhost:${PORT}`);
     });

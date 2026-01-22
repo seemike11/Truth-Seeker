@@ -1,3 +1,5 @@
+import { config } from '../config';
+
 export function formatDate(date: Date, format: string): string {
     const options: Intl.DateTimeFormatOptions = {
         year: 'numeric',
@@ -12,7 +14,11 @@ export function formatDate(date: Date, format: string): string {
     return new Intl.DateTimeFormat('en-US', options).format(date);
 }
 
-export function generateToken(payload: object, secret: string, expiresIn: string): string {
+export function generateToken(
+    payload: object,
+    secret: string = config.sessionSecret,
+    expiresIn: string,
+): string {
     const jwt = require('jsonwebtoken');
     return jwt.sign(payload, secret, { expiresIn });
 }
