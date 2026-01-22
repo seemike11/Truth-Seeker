@@ -3,54 +3,330 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Honest Govt App</title>
+    <title>HonestGov</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
     <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 2rem; max-width: 800px; }
-      .row { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
-      input { padding: 0.5rem; }
-      button { padding: 0.55rem 0.8rem; cursor: pointer; }
-      pre { background: #f6f8fa; padding: 1rem; overflow: auto; }
-      small { color: #555; }
+      :root {
+        --ink: #1b2233;
+        --ink-muted: #6b7280;
+        --pill: #e5e7eb;
+        --panel: #ffffff;
+        --panel-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
+        --navy: #0f172a;
+        --line: #e6e6ea;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        background: #f4f5f7;
+        font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+        color: var(--ink);
+      }
+
+      .app-shell {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      header {
+        background: #fff;
+        border-bottom: 1px solid var(--line);
+        padding: 1rem 1.5rem;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        max-width: 1100px;
+        margin: 0 auto;
+      }
+
+      .logo {
+        display: flex;
+        gap: 0.75rem;
+        align-items: center;
+        font-family: "Playfair Display", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+      }
+
+      .logo-badge {
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        border: 2px solid var(--ink);
+        display: grid;
+        place-items: center;
+        font-weight: 600;
+      }
+
+      .menu {
+        font-size: 1.5rem;
+      }
+
+      main {
+        flex: 1;
+        display: grid;
+        place-items: center;
+        padding: 2.5rem 1.5rem 4rem;
+      }
+
+      .hero {
+        width: min(520px, 100%);
+        text-align: center;
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      .hero h1 {
+        font-family: "Playfair Display", serif;
+        font-weight: 700;
+        font-size: clamp(2.3rem, 5vw, 3.2rem);
+        line-height: 1.1;
+        margin: 0;
+      }
+
+      .hero p {
+        font-size: 1.1rem;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      .tabs {
+        display: inline-flex;
+        gap: 0.5rem;
+        align-self: center;
+        background: #f1f5f9;
+        padding: 0.4rem;
+        border-radius: 999px;
+      }
+
+      .tab {
+        border: none;
+        background: transparent;
+        padding: 0.55rem 1.3rem;
+        border-radius: 999px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+      }
+
+      .tab.active {
+        background: var(--navy);
+        color: #fff;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.2);
+      }
+
+      .input-card {
+        background: #f8fafc;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 2.5rem 2rem;
+        font-size: 1.1rem;
+        color: #9aa3b2;
+        min-height: 160px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .input-card span {
+        display: inline-block;
+        max-width: 80%;
+      }
+
+      .onboarding-overlay {
+        position: relative;
+        margin-top: 3rem;
+        width: min(520px, 100%);
+        background: #f7f7f8;
+        border-radius: 30px;
+        padding: 2.5rem 2.5rem 2.2rem;
+        text-align: center;
+        box-shadow: var(--panel-shadow);
+      }
+
+      .onboarding-header {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 1.5rem;
+      }
+
+      .close {
+        border: none;
+        background: transparent;
+        font-size: 1.4rem;
+        color: #9ca3af;
+      }
+
+      .icon-tile {
+        width: 82px;
+        height: 82px;
+        border-radius: 24px;
+        background: #e5e7eb;
+        display: grid;
+        place-items: center;
+        margin: 0 auto 1.5rem;
+      }
+
+      .icon-tile span {
+        font-size: 2rem;
+      }
+
+      .onboarding-title {
+        font-family: "Playfair Display", serif;
+        font-size: 2rem;
+        margin: 0 0 0.4rem;
+      }
+
+      .onboarding-subtitle {
+        color: var(--ink-muted);
+        margin: 0 0 1.2rem;
+      }
+
+      .onboarding-body {
+        color: #4b5563;
+        line-height: 1.7;
+        margin: 0 0 1.6rem;
+      }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.5rem 1.2rem;
+        background: var(--pill);
+        border-radius: 999px;
+        font-size: 0.9rem;
+        color: #334155;
+      }
+
+      .dots {
+        display: flex;
+        gap: 0.4rem;
+        justify-content: center;
+        margin: 1.6rem 0;
+      }
+
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #d1d5db;
+      }
+
+      .dot.active {
+        width: 32px;
+        background: var(--navy);
+      }
+
+      .onboarding-actions {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .ghost-button {
+        border: none;
+        background: transparent;
+        font-size: 1rem;
+        color: #4b5563;
+        display: inline-flex;
+        gap: 0.5rem;
+        align-items: center;
+      }
+
+      .primary-button {
+        border: none;
+        background: var(--navy);
+        color: #fff;
+        padding: 0.8rem 1.8rem;
+        border-radius: 12px;
+        font-size: 1rem;
+        box-shadow: 0 12px 25px rgba(15, 23, 42, 0.25);
+      }
+
+      @media (max-width: 540px) {
+        header {
+          padding: 0.8rem 1.2rem;
+        }
+
+        .onboarding-overlay {
+          padding: 2rem 1.6rem;
+        }
+      }
     </style>
   </head>
   <body>
-    <h1>Honest Govt App</h1>
-    <p><small>If you can see this page, the server is running.</small></p>
+    <div class="app-shell">
+      <header>
+        <div class="brand">
+          <div class="logo">
+            <div class="logo-badge">✓</div>
+            HonestGov
+          </div>
+          <div class="menu">≡</div>
+        </div>
+      </header>
 
-    <h2>Test API</h2>
-    <div class="row">
-      <label for="userId">User ID:</label>
-      <input id="userId" value="1" />
-      <button id="getUser">GET /api/users/:id</button>
-      <button id="createUser">POST /api/users</button>
+      <main>
+        <section class="hero">
+          <h1>Truth in plain language.</h1>
+          <p>
+            Neutral, AI-powered analysis of political statements to help you separate fact from framing.
+          </p>
+
+          <div class="tabs">
+            <button class="tab active">Text</button>
+            <button class="tab">Link</button>
+            <button class="tab">Screenshot</button>
+          </div>
+
+          <div class="input-card">
+            <span>“Paste a statement, tweet, or quote here to analyze...”</span>
+          </div>
+
+          <p>Speaker (Optional)</p>
+
+          <div class="onboarding-overlay">
+            <div class="onboarding-header">
+              <button class="close">×</button>
+            </div>
+            <div class="icon-tile">
+              <span>📷</span>
+            </div>
+            <h2 class="onboarding-title">Submit Text or Screenshots</h2>
+            <p class="onboarding-subtitle">Multiple ways to fact-check</p>
+            <p class="onboarding-body">
+              Paste any political statement, tweet, or speech excerpt directly. Or upload a screenshot of
+              a social media post — our AI will extract the text and analyze it automatically.
+            </p>
+            <div class="pill">Text input · Screenshot upload · AI text extraction</div>
+            <div class="dots">
+              <span class="dot"></span>
+              <span class="dot active"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+              <span class="dot"></span>
+            </div>
+            <div class="onboarding-actions">
+              <button class="ghost-button">‹ Back</button>
+              <button class="primary-button">Next ›</button>
+            </div>
+          </div>
+        </section>
+      </main>
     </div>
-
-    <h3>Response</h3>
-    <pre id="out">(click a button)</pre>
-
-    <script>
-      const out = document.getElementById('out');
-      const userId = document.getElementById('userId');
-
-      function show(result) {
-        out.textContent = typeof result === 'string' ? result : JSON.stringify(result, null, 2);
-      }
-
-      document.getElementById('getUser').addEventListener('click', async () => {
-        const res = await fetch(`/api/users/${encodeURIComponent(userId.value)}`);
-        const text = await res.text();
-        show({ status: res.status, body: text });
-      });
-
-      document.getElementById('createUser').addEventListener('click', async () => {
-        const res = await fetch('/api/users', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ name: 'Test User' }),
-        });
-        const text = await res.text();
-        show({ status: res.status, body: text });
-      });
-    </script>
   </body>
 </html>
