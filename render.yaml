@@ -6,3 +6,6 @@ services:
     buildCommand: npm ci && npm run build
     startCommand: npm start
     healthCheckPath: /
+    domains:
+      - honestgovt.com
+      - www.honestgovt.com
