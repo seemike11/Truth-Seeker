@@ -2,7 +2,7 @@ import express from 'express';
 import path from 'path';
 import router from './routes';
 
-const app = express();
+export const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middleware
@@ -15,6 +15,8 @@ app.use(express.static(publicDir));
 // API routes
 app.use('/api', router);
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+if (require.main === module) {
+    app.listen(PORT, () => {
+        console.log(`Server is running on http://localhost:${PORT}`);
+    });
+}
