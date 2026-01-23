@@ -132,18 +132,86 @@
         background: #f8fafc;
         border: 1px solid #e2e8f0;
         border-radius: 20px;
-        padding: 2.5rem 2rem;
+        padding: 2rem;
         font-size: 1.1rem;
         color: #9aa3b2;
-        min-height: 160px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        min-height: 200px;
+        display: grid;
+        gap: 1rem;
       }
 
-      .input-card span {
-        display: inline-block;
-        max-width: 80%;
+      .fact-form {
+        display: grid;
+        gap: 1rem;
+        align-items: start;
+      }
+
+      .fact-form textarea,
+      .fact-form input {
+        width: 100%;
+        border-radius: 14px;
+        border: 1px solid #dbe3ee;
+        padding: 0.9rem 1rem;
+        font-size: 1rem;
+        font-family: inherit;
+        color: var(--ink);
+        background: #fff;
+      }
+
+      .fact-form textarea {
+        min-height: 140px;
+        resize: vertical;
+      }
+
+      .fact-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .helper-text {
+        font-size: 0.95rem;
+        color: var(--ink-muted);
+        margin: 0;
+      }
+
+      .result-card {
+        margin-top: 1.5rem;
+        background: #fff;
+        border-radius: 18px;
+        padding: 1.5rem;
+        border: 1px solid #e5e7eb;
+        text-align: left;
+        display: none;
+        gap: 1rem;
+      }
+
+      .result-card.visible {
+        display: grid;
+      }
+
+      .result-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 1rem;
+        align-items: center;
+      }
+
+      .result-pill {
+        background: #f3f4f6;
+        color: #1f2937;
+        padding: 0.35rem 0.9rem;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 600;
+      }
+
+      .result-list {
+        display: grid;
+        gap: 0.6rem;
+        padding-left: 1.1rem;
       }
 
       .onboarding-overlay {
@@ -294,10 +362,36 @@
           </div>
 
           <div class="input-card">
-            <span>“Paste a statement, tweet, or quote here to analyze...”</span>
+            <form class="fact-form" id="fact-checker-form">
+              <label>
+                <span class="helper-text">Statement to analyze</span>
+                <textarea
+                  id="statement-input"
+                  placeholder="Paste a statement, tweet, or quote here to analyze..."
+                  required
+                ></textarea>
+              </label>
+              <label>
+                <span class="helper-text">Speaker (optional)</span>
+                <input id="speaker-input" type="text" placeholder="e.g., City Mayor, Senator Smith" />
+              </label>
+              <div class="fact-actions">
+                <p class="helper-text" id="status-message">Ready to check a statement.</p>
+                <button class="primary-button" type="submit">Check facts</button>
+              </div>
+            </form>
           </div>
 
-          <p>Speaker (Optional)</p>
+          <div class="result-card" id="result-card">
+            <div class="result-header">
+              <div>
+                <h3 id="result-verdict" style="margin: 0;">Fact-check summary</h3>
+                <p class="helper-text" id="result-summary" style="margin: 0.2rem 0 0;"></p>
+              </div>
+              <span class="result-pill" id="result-confidence">Confidence</span>
+            </div>
+            <ul class="result-list" id="result-checks"></ul>
+          </div>
 
           <div class="onboarding-overlay">
             <div class="onboarding-header">
@@ -328,5 +422,65 @@
         </section>
       </main>
     </div>
+    <script>
+      const form = document.getElementById("fact-checker-form");
+      const statementInput = document.getElementById("statement-input");
+      const speakerInput = document.getElementById("speaker-input");
+      const statusMessage = document.getElementById("status-message");
+      const resultCard = document.getElementById("result-card");
+      const resultVerdict = document.getElementById("result-verdict");
+      const resultSummary = document.getElementById("result-summary");
+      const resultConfidence = document.getElementById("result-confidence");
+      const resultChecks = document.getElementById("result-checks");
+
+      const renderChecks = (checks) => {
+        resultChecks.innerHTML = "";
+        checks.forEach((check) => {
+          const item = document.createElement("li");
+          item.textContent = `${check.label}: ${check.status}`;
+          resultChecks.appendChild(item);
+        });
+      };
+
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault();
+        const statement = statementInput.value.trim();
+        const speaker = speakerInput.value.trim();
+
+        if (!statement) {
+          statusMessage.textContent = "Please enter a statement to analyze.";
+          resultCard.classList.remove("visible");
+          return;
+        }
+
+        statusMessage.textContent = "Analyzing statement...";
+        resultCard.classList.remove("visible");
+
+        try {
+          const response = await fetch("/api/fact-check", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ statement, speaker, mode: "text" }),
+          });
+
+          const payload = await response.json();
+
+          if (!response.ok) {
+            throw new Error(payload.error || "Unable to analyze this statement.");
+          }
+
+          resultVerdict.textContent = payload.verdict;
+          resultSummary.textContent = payload.summary;
+          resultConfidence.textContent = `Confidence: ${Math.round(payload.confidence * 100)}%`;
+          renderChecks(payload.checks || []);
+
+          statusMessage.textContent = "Analysis ready.";
+          resultCard.classList.add("visible");
+        } catch (error) {
+          statusMessage.textContent = error.message;
+          resultCard.classList.remove("visible");
+        }
+      });
+    </script>
   </body>
 </html>
