@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Daily Task Calendar</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <h1>Daily Task Calendar</h1>
+        <p id="todayLabel"></p>
+      </div>
+      <button id="notifyBtn">Enable Reminders</button>
+    </header>
+
+    <section class="panel">
+      <h2>Add Task</h2>
+      <form id="taskForm">
+        <input id="taskTitle" type="text" placeholder="Task name" required />
+        <textarea id="taskNotes" placeholder="Notes"></textarea>
+
+        <div class="row">
+          <label>
+            Date
+            <input id="taskDate" type="date" required />
+          </label>
+          <label>
+            Reminder time
+            <input id="taskTime" type="time" required />
+          </label>
+        </div>
+
+        <label class="checkbox">
+          <input id="repeatDaily" type="checkbox" />
+          Repeat daily
+        </label>
+
+        <button type="submit">Save Task</button>
+      </form>
+    </section>
+
+    <section class="panel">
+      <div class="calendarTop">
+        <button id="prevDay">‹</button>
+        <h2 id="selectedDateLabel"></h2>
+        <button id="nextDay">›</button>
+      </div>
+      <input id="jumpDate" type="date" />
+      <div id="taskList"></div>
+    </section>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
