@@ -3,57 +3,67 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Daily Task Calendar</title>
-  <link rel="manifest" href="manifest.json" />
+  <title>Daily Task Assistant</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="app">
-    <header>
+  <main class="app">
+    <header class="top">
       <div>
-        <h1>Daily Task Calendar</h1>
-        <p id="todayLabel"></p>
+        <h1>Daily Task Assistant</h1>
+        <p id="todayLabel">Loading today...</p>
       </div>
-      <button id="notifyBtn">Enable Reminders</button>
+      <button id="notifyBtn" class="smallBtn">Enable Alerts</button>
     </header>
 
-    <section class="panel">
-      <h2>Add Task</h2>
-      <form id="taskForm">
-        <input id="taskTitle" type="text" placeholder="Task name" required />
-        <textarea id="taskNotes" placeholder="Notes"></textarea>
+    <section class="hero panel">
+      <h2>Tell me what you need to do</h2>
+      <p class="hint">Example: “Remind me to call the lawyer today” or “I need to take trash out tonight.”</p>
+      <button id="speakBtn" class="speakBtn">🎙️ Speak Task</button>
+      <textarea id="taskText" placeholder="Type or speak your task here..."></textarea>
+      <button id="analyzeBtn">Suggest Reminder</button>
+    </section>
 
-        <div class="row">
-          <label>
-            Date
-            <input id="taskDate" type="date" required />
-          </label>
-          <label>
-            Reminder time
-            <input id="taskTime" type="time" required />
-          </label>
-        </div>
-
-        <label class="checkbox">
-          <input id="repeatDaily" type="checkbox" />
-          Repeat daily
+    <section class="panel" id="suggestionPanel">
+      <h2>Suggested Plan</h2>
+      <div class="grid">
+        <label>Category
+          <select id="category">
+            <option>Personal</option>
+            <option>Calls</option>
+            <option>Errands</option>
+            <option>Bills</option>
+            <option>Health</option>
+            <option>Truck</option>
+            <option>Legal</option>
+            <option>Work</option>
+            <option>Home</option>
+          </select>
         </label>
-
-        <button type="submit">Save Task</button>
-      </form>
+        <label>Date
+          <input id="taskDate" type="date" />
+        </label>
+        <label>First reminder
+          <input id="taskTime" type="time" />
+        </label>
+        <label>Check-in later
+          <input id="checkTime" type="time" />
+        </label>
+      </div>
+      <label class="checkbox"><input id="repeatDaily" type="checkbox" /> Repeat daily</label>
+      <button id="saveTaskBtn">Save Task</button>
     </section>
 
     <section class="panel">
-      <div class="calendarTop">
-        <button id="prevDay">‹</button>
-        <h2 id="selectedDateLabel"></h2>
-        <button id="nextDay">›</button>
+      <div class="daybar">
+        <button id="prevDay" class="mini">‹</button>
+        <h2 id="selectedDateLabel">Today</h2>
+        <button id="nextDay" class="mini">›</button>
       </div>
       <input id="jumpDate" type="date" />
       <div id="taskList"></div>
     </section>
-  </div>
-
+  </main>
   <script src="app.js"></script>
 </body>
 </html>
