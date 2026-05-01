@@ -1,1 +1,1 @@
-{"scripts":{"start":"expo start","ios":"expo start --ios","android":"expo start --android"},"dependencies":{"@react-native-async-storage/async-storage":"latest","expo":"latest","expo-notifications":"latest","expo-device":"latest","react":"latest","react-native":"latest"},"devDependencies":{}}
+{"scripts":{"start":"expo start","ios":"expo start --ios","android":"expo start --android"},"dependencies":{"@react-native-async-storage/async-storage":"latest","expo":"latest","expo-notifications":"latest","react":"latest","react-native":"latest"},"devDependencies":{},"private":true}
